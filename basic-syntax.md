@@ -127,6 +127,76 @@
 					   ...
   ```
 
+- Section
+  - To define partially applied with infix function
+  - Wrap the function by parentheses and supply a parameter on one side only
+  - e.g., 
+	```
+	divideByTen :: (Floating a) => a -> a
+	divideByTen = (/10) -- leave out the other side where an argument will be filled in
+	
+	divideByTen 200 
+	-- 20.0
+	```
 
+- Lambda expression
+  - Syntax
+	```
+	(\<parameters> -> <body>) -- parentheses are optional
+	```
+  - Example
+	```
+	numLongChains :: Int
+	numLongChains = length (filter (\xs -> length xs > 15) (map chain [1..100]))
+	```
+  - Could not define multiple patterns in lambda
+  
+- Folds
+  - To reduce a list to a single item
+  - Syntax
+  ```
+  foldl <binary function> <accumulator> <list>
+  foldr <binary function> <accumulator> <list>
+  ```
+  - Example
+  ```
+  sum' :: (Num a) => [a] -> a
+  sum' xs = foldl (\acc x -> acc + x) 0 xs
+  
+  map' :: (a -> b) -> [a] -> [b]
+  map' f xs = foldr (\x acc -> f x : acc) [] xs
+  
+  -- NOTE the difference between the order of the parameters in
+  -- the binary function in left fold and that in right fold
+  ```
+  - Shortcuts: 
+    - `foldl1`: same as `foldl`, except that the accumulator is set to the first element in the list
+	- `foldr1`: same as `foldr`, except that the accumulator is set to the last element in the list
+
+- `$` operator
+  - Function application operator
+  - Lowest precedence, right-associative
+  - Help to write fewer parentheses, e.g., 
+	```
+	sum (filter (> 10) (map (*2) [2..10]))
+	-- can be rewritten as
+	> sum $ filter (> 10) $ map (*2) [2..10]
+	```
+  - Help to treat function application as another function, e.g.,
+	```
+	map ($ 3) [(4+), (10*), (^2), sqrt]
+	```
+
+- `.` operator
+  - Function composition operator
+  - Right-associative
+  - Definition
+	```
+	(.) :: (b -> c) -> (a -> b) -> a -> c
+	f . g = \x -> f (g x)
+	```
+
+
+  
 # References
 [1]: Learn you a Haskell for great good

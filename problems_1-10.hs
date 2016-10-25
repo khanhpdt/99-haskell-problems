@@ -37,7 +37,13 @@ isPalindrome [x] = True
 isPalindrome x = head x == last x && isPalindrome (init (tail x))
 
 -- Problem 7
--- TODO
+data NestedList a = Elem a | List [NestedList a]
+  deriving (Show)
+
+flatten :: (NestedList a) -> [a]
+flatten (List []) = []
+flatten (Elem x) = [x]
+flatten (List (x:xs)) = (flatten x) ++ (flatten (List xs))
 
 -- Problem 8
 compress :: Eq a => [a] -> [a]

@@ -1,3 +1,31 @@
+-- Problem 11
+data EncodeItem a = Single a | Multiple Int a
+  deriving (Show)
+
+modifiedEncode :: (Eq a) => [a] -> [EncodeItem a]
+modifiedEncode xs = foldr combine [] xs
+  where combine x [] = [Single x]
+        combine x all@((Single y):ys)
+          | x == y = (Multiple 2 y):ys
+          | otherwise = (Single x) : all
+        combine x all@((Multiple n y):ys)
+          | x == y = (Multiple (n + 1) y):ys
+          | otherwise = (Single x) : all
+
+-- Problem 12
+modifiedDecode :: (Eq a) => [EncodeItem a] -> [a]
+modifiedDecode xs = foldr decode [] xs
+  where decode (Single x) acc = x:acc
+        decode (Multiple n x) acc = (take n (repeat x)) ++ acc
+
+-- Problem 13
+encodeDirect :: (Eq a) => [a] -> [EncodeItem a]
+encodeDirect [] = []
+encodeDirect (x:xs)
+  | n == 0 = (Single x) : (encodeDirect xs)
+  | otherwise = (Multiple (1 + n) x) : (encodeDirect (drop n xs))
+    where n = length (takeWhile (==x) xs)
+
 -- Problem 14
 dupli :: [a] -> [a]
 dupli [] = []
